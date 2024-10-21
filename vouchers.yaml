@@ -143,6 +143,32 @@ paths:
               schema:
                 type: integer
                 example: 400
+  /voucher-management/customer/add:
+    post:
+      tags: 
+      - Vouchers
+      summary: Add user voucher
+      description: Add voucher to balance.
+      operationId: addVoucher
+      requestBody:
+        description: Validate balance of the current user.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  example: 6SG4GZDY
+      responses:
+        200:
+          description: Voucher validated successfully.
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 400
   /voucher-management0/customer/pay:
     post:
       tags: 
