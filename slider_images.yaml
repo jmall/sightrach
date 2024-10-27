@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Slider Images
+  description: API for retrieving slider images.
+  version: 1.0.0
+servers:
+  - url: https://h73q45ao7a.execute-api.eu-central-1.amazonaws.com/dev/
+    description: Development API server
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+      SliderImagesDetails:
+        type: object
+        properties:
+          image_name:
+            type: string
+            example: 'full_path_to_image'
+          id:
+            type: integer
+            example: 6
+          text:
+            type: string
+            example: 'dummy text'
+          folder_name:
+            type: string
+            example: 'images-top'
+          link:
+            type: string
+            example: 'optional link to the text'
+  responses:
+    NotFound:
+      description: Resource Not Found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "NotFound - The specified resource ID was not found."
+    MethodNotAllowed:
+      description: Unauthorized method.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "MethodNotAllowed - The specified method not supported."
+security:
+  - BearerAuth: []
+
+paths:
+  /task-management/customer/slider-images-top:
+    get:
+      tags:
+        - Slider images
+      summary: Promo images for dashboard top slider
+      description: Retrieves an object of images, texts and links (optional).
+      operationId: getSliderImagesTop
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Object of slider images top retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SliderImagesDetails'
+  /task-management/customer/slider-images-bottom:
+    get:
+      tags:
+        - Slider images
+      summary: Promo images for dashboard bottom slider
+      description: Retrieves an object of images, texts and links (optional).
+      operationId: getSliderImagesBottom
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Object of slider images bottom retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SliderImagesDetails'
