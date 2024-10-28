@@ -715,7 +715,14 @@ paths:
         - Storage management
       summary: Get Storage price list
       operationId: Get Storage price list
-      
+      parameters:
+        - in: query
+          name: scope
+          schema:
+            type: string
+            enum:
+              - all
+              - user
       responses:
         '200':
           description: Successful operation
