@@ -724,7 +724,7 @@ paths:
               - all
               - user
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
@@ -732,7 +732,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/storage_plan'
-        '404':
+        404:
           description: Not found
           content:
             application/json:
@@ -746,3 +746,99 @@ paths:
                         type: string
                         enum:
                           - 'storage plan not found'
+
+  /account-management/customer/email-notifications-config:
+    get:
+      tags:
+        - Email Notifications management
+      summary: Get Email notifications configuration
+      operationId: Get Email notifications configuration
+      parameters:
+        - in: query
+          name: scope
+          schema:
+            type: string
+            enum:
+              - all
+              - user
+      responses:
+         200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties: 
+                      email_notifications_config:
+                        type: array
+                        items:
+                          type: integer
+                  - type: object
+                    properties: 
+                      id:
+                        type: integer
+                      notification_type:
+                        type: string
+                      description:
+                        type: string
+         404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'storage plan not found'
+    put:
+      tags:
+        - Email Notifications management
+      summary: Put Email notifications configuration
+      operationId: Put Email notifications configuration
+      requestBody:
+        description: Array of ids of email notification types
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_notifications:
+                  type: array
+                  items:
+                    type: integer
+        required: true
+      responses:
+         200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  email_notifications_config:
+                    type: array
+                    items:
+                      type: integer
+         500:
+          description: "unexpected error response for PUT /account-management/customer/email-notifications-config"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException       
+                  
