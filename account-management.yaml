@@ -1040,79 +1040,70 @@ paths:
                         type: string
                       error:
                         type: string
-    post:
-      tags:
-        - Get work area
-      summary: Edit Work area
-      operationId: Edit Work area info
-      requestBody:
-        description: Edit Work area
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                array_of_work_area:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      radius:
-                        type: integer
-                        example: 100
-                      location_name:
-                        type: string
-                        example: "Brodway Ave."
-                      area_center_x:
-                        type: string
-                        example: "10.10"
-                      area_center_y:
-                        type: string
-                        example: "25.8"
-                operator_drones:
-                  type: array
-                  items:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: integer
-                  example:
-                    - { "15": [7, 8, 9] }
-                    - { "14": [14, 15, 16] }
-                    - { "16": [10, 22, 34] }
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  body:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                      error:
-                        type: string
-        '404':
-          description: Work area not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  body:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                      error:
-                        type: string
+    
                             
-  /account-management/operator/work_area/{id}:                          
+  /account-management/operator/work_area/{id}:    
+    put:
+        tags:
+          - Get work area
+        summary: Edit Work area
+        operationId: Edit Work area info
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          description: Edit Work area
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  radius:
+                    type: integer
+                    example: 100
+                  location_name:
+                    type: string
+                    example: "Brodway Ave."
+                  area_center_x:
+                    type: string
+                    example: "10.10"
+                  area_center_y:
+                    type: string
+                    example: "25.8"
+          required: true
+        responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    body:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        error:
+                          type: string
+          '404':
+            description: Work area not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    body:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        error:
+                          type: string
+                        
     delete:
       tags:
         - Get work area
