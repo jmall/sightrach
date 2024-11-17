@@ -1,3 +1,4 @@
+
 components:
   securitySchemes:
     bearerAuth:
@@ -44,6 +45,17 @@ components:
         is_default:
           type: boolean
         position:
+          type: string
+    drones-cameras:
+      type: object
+      properties:
+        radius:
+          type: integer
+        location_name:
+          type: string
+        area_center_x:
+          type: string
+        area_center_y:
           type: string
     company:
       type: object
@@ -842,3 +854,296 @@ paths:
                       enum:
                         - UnexpectedException       
                   
+  /account-management/operator/drones-cameras:
+    get:
+      tags:
+        - Manage drones/cameras/drones-cameras
+      summary: Get drone
+      operationId: Get drone
+      parameters:
+        - in: query
+          name: Drone ID
+          schema:
+            type: integer
+      responses:
+         200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties: 
+                      email_notifications_config:
+                        type: array
+                        items:
+                          type: integer
+                  - type: object
+                    properties: 
+                      id:
+                        type: integer
+                      notification_type:
+                        type: string
+                      description:
+                        type: string
+         404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'storage plan not found' 
+    post:
+      tags:
+        - Manage drones/cameras/drones-cameras
+      summary: Create Drone/Camera/Work area
+      operationId: post drones/cameras/drones-cameras info
+      requestBody:
+        description: Create new person
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                array_of_work_area:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      radius:
+                        type: integer
+                        example: 100
+                      location_name:
+                        type: string
+                        example: "Brodway Ave."
+                      area_center_x:
+                        type: string
+                        example: "10.10"
+                      area_center_y:
+                        type: string
+                        example: "25.8"
+                operator_drones:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: integer
+                  example:
+                    - { "15": [7, 8, 9] }
+                    - { "14": [14, 15, 16] }
+                    - { "16": [10, 22, 34] }
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+        '404':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+                            
+  /account-management/operator/drones-cameras/{id}:                          
+    delete:
+      tags:
+        - Manage drones/cameras/drones-cameras
+      summary: delete Drone
+      description: delete Drone
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                default: 1
+        404:
+          description: Drone not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Drone not found'
+                          
+  /account-management/operator/work_area:
+    get:
+      tags:
+        - Get work area
+      summary: Get work area
+      operationId: Get work area
+      parameters:
+        - in: query
+          name: work_area_id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                default: 1
+        '404':
+          description: Work area not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+    post:
+      tags:
+        - Get work area
+      summary: Edit Work area
+      operationId: Edit Work area info
+      requestBody:
+        description: Edit Work area
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                array_of_work_area:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      radius:
+                        type: integer
+                        example: 100
+                      location_name:
+                        type: string
+                        example: "Brodway Ave."
+                      area_center_x:
+                        type: string
+                        example: "10.10"
+                      area_center_y:
+                        type: string
+                        example: "25.8"
+                operator_drones:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: integer
+                  example:
+                    - { "15": [7, 8, 9] }
+                    - { "14": [14, 15, 16] }
+                    - { "16": [10, 22, 34] }
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+        '404':
+          description: Work area not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+                            
+  /account-management/operator/work_area/{id}:                          
+    delete:
+      tags:
+        - Get work area
+      summary: delete Work Area
+      description: delete Work Area
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                default: 1
+        404:
+          description: Work Area not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Work Area not found'
+                          
