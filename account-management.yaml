@@ -107,7 +107,7 @@ paths:
   /account-management/customer/account:
     put:
       tags:
-        - Account management
+        - Account management customer
       description: update account
       requestBody:
         description: Update account
@@ -162,10 +162,9 @@ paths:
                       type: string
                       enum:
                         - UnexpectedException
-  /account-management/customer/account/:
     get:
       tags:
-        - Account management
+        - Account management customer
       description: Get account information
       responses:
         200:
@@ -228,13 +227,133 @@ paths:
                       type: string
                       enum:
                         - UnexpectedException
-                    
+  /account-management/operator/account:
+    put:
+      tags:
+        - Account management operator
+      description: update account
+      requestBody:
+        description: Update account
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wizard_enabled:
+                  type: boolean
+                business_type_id:
+                  type: integer
+        required: true
+      responses:
+        200:
+          description: Successful update account information
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/account'
+        400:
+          description: "error response for PUT /account-management/customer/account"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Duplicate entry error'
+                          - 'Error updating account'
+                          - 'Missing key in request body'
+        500:
+          description: "unexpected error response for POST /account-management/customer/account"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    get:
+      tags:
+        - Account management operator
+      description: Get account information
+      responses:
+        200:
+          description: Successful update account information
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/account'
+        404:
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Account not found'
+        400:
+          description: Bad request due to missing parameters or invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Bad request: Missing or invalid parameters'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for POST /account-management/customer/account"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException                  
 ###############################################                    
                     
   /account-management/customer/person/{id_to_edit}:
     put:
       tags:
-        - Person management
+        - Person management customer
       summary: Update Person info
       parameters:
       - name: "id_to_edit"
@@ -300,7 +419,7 @@ paths:
                         - UnexpectedException
     get:
       tags:
-        - Person management
+        - Person management customer
       summary: Get Person info
       parameters:
       - name: "id_to_edit"
@@ -359,7 +478,7 @@ paths:
                         - UnexpectedException
     delete:
       tags:
-        - Person management
+        - Person management customer
       summary: ID of person to delete
       parameters:
       - name: "id_to_edit"
@@ -388,7 +507,7 @@ paths:
   /account-management/customer/person:
     post:
       tags:
-        - Person management
+        - Person management customer
       summary: Create new person
       operationId: post person info
       requestBody:
@@ -429,7 +548,7 @@ paths:
                         type: string
     get:
       tags:
-        - Person management
+        - Person management customer
       summary: Get Persons info
       responses:
         200:
@@ -478,13 +597,259 @@ paths:
                       type: string
                       enum:
                         - UnexpectedException                    
-    
+  /account-management/operator/person/{id}:
+    put:
+      tags:
+        - Person management operator
+      summary: Update Person info
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of person for edit"
+        required: true
+        schema:
+          type: "integer"
+          format: "int32"
+      operationId: set person info operator
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/person'
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        404:
+          description: Person not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Person not found'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for PUT /account-management/customer/person/{id_to_edit}"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    get:
+      tags:
+        - Person management operator
+      summary: Get Person info
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of person"
+        required: true
+        schema:
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        404:
+          description: Person not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Person not found'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for PUT /account-management/customer/person/{id_to_edit}"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    delete:
+      tags:
+        - Person management operator
+      summary: ID of person to delete
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of person to return"
+        required: true
+        schema:
+          type: "integer"
+          format: "int32"
+      description: ID of person to delete
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+  /account-management/operator/person:
+    post:
+      tags:
+        - Person management operator
+      summary: Create new person
+      operationId: post person info operator
+      requestBody:
+        description: Create new person
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/person'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+        '404':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+    get:
+      tags:
+        - Person management operator
+      summary: Get Persons info
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        404:
+          description: Person not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Person(s) not found'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for PUT /account-management/customer/person"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException  
   ###############################################                    
                     
   /account-management/customer/company:
     put:
       tags:
-        - Company management
+        - Company management customer
       summary: Update Company info
       operationId: update company info
       requestBody:
@@ -543,7 +908,7 @@ paths:
   
     post:
       tags:
-        - Company management
+        - Company management customer
       summary: Create new company
       operationId: post company info
       requestBody:
@@ -588,7 +953,7 @@ paths:
                         - UnexpectedException
     get:
       tags:
-        - Company management
+        - Company management customer
       summary: Get company info
       responses:
         200:
@@ -627,7 +992,7 @@ paths:
   /account-management/customer/company/{id_to_edit1}:             
     delete:
       tags:
-        - Company management
+        - Company management customer
       summary: ID of company to delete
       description: ID of company to delete
       parameters:
@@ -686,25 +1051,25 @@ paths:
                       type: string
                       enum:
                         - UnexpectedException
-  /account-management/customer/mcc_code:
-    get:
+  /account-management/operator/company:
+    put:
       tags:
-        - Company management
-      summary: Get MCC codes info
-      operationId: mcc codes info
+        - Company management operator
+      summary: Update operator Company info
+      operationId: update operastor company info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/company'
+        required: true
       responses:
         200:
           description: Successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    mcc_code:
-                      type: integer
-                      description: string
+                $ref: '#/components/schemas/company'
         404:
           description: Company not found
           content:
@@ -718,9 +1083,180 @@ paths:
                       message:
                         type: string
                         enum:
-                          - 'MCC codes not found'
-                          
+                          - 'Company not found'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for PUT /account-management/customer/company"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException                
   
+    post:
+      tags:
+        - Company management operator
+      summary: Create new company
+      operationId: post operato rcompany info
+      requestBody:
+        description: Send for get auth token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/company'
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/company'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for POST /account-management/customer/company"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    get:
+      tags:
+        - Company management operator
+      summary: Get operator company info
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/company'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for GET /account-management/customer/company"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException        
+    
+  /account-management/operator/company/{id}:             
+    delete:
+      tags:
+        - Company management operator
+      summary: ID of company to delete
+      description: ID of company to delete
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of company to delete"
+        required: true
+        schema:
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                default: 1
+        404:
+          description: Company not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Company not found'
+        401:
+          description: Cognito Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized"
+        500:
+          description: "unexpected error response for GET /account-management/customer/company"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+                        
   /account-management/customer/storage:
     get:
       tags:
