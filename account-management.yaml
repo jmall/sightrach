@@ -78,6 +78,8 @@ components:
         type: integer
        apartment:
         type: string
+       url:
+        type: string
     storage_plan:
       type: object
       properties:
