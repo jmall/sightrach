@@ -46,6 +46,135 @@ components:
                     type: integer
                   amount_excluding_tax:
                     type: integer
+    connected_account:
+      type: object
+      properties:
+        id: 
+          type: string
+        business_profile:
+          $ref: '#/components/schemas/business_profile'
+        business_type:
+          type: string
+          enum:
+            - individual
+            - company
+        charges_enabled:
+          type: boolean
+          default: false
+        payouts_enabled:
+          type: boolean
+          default: false
+        company:
+          type: object
+        external_accounts:
+          type: object
+        metadata:
+          type: object
+          properties:
+            operator_email: 
+             type: string
+    business_profile:
+      type: object
+      properties:
+        mcc:
+          type: string
+        url:
+          type: string
+    dob:
+      type: object
+      properties:
+        day:
+          type: string
+        month:
+          type: string
+        year:
+          type: string
+      required:
+        - day
+        - month
+        - year
+    address:
+      type: object
+      properties:
+        city:
+          type: string
+        line1:
+          type: string
+        postal_code:
+          type: string
+        state:
+          type: string
+      required:
+        - city
+        - line1
+        - postal_code
+        - state
+    person:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/address'
+        dob:
+          $ref: '#/components/schemas/dob'
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        ssn_last_4:
+          type: string
+        id_number:
+          type: string
+        relationship:
+          type: object
+          properties:
+            representative:
+              type: boolean
+            executive:
+              type: boolean
+            title:
+              type: string
+          required:
+            - representative
+            - executive
+            - title
+      required:
+        - address
+        - dob
+        - email
+        - first_name
+        - last_name
+        - phone
+        - ssn_last_4
+        - id_number
+    company:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/address'
+        name:
+          type: string
+        tax_id:
+          type: string
+        phone:
+          type: string
+    card:
+      type: object
+      properties:
+        id: 
+          type: string
+        brand:
+          type: string
+        exp_month: 
+          type: integer
+        exp_year:
+          type: integer
+        last4:
+          type: string
     task:
       type: object
       properties:
@@ -134,7 +263,7 @@ paths:
   /payment-management/customer/keys:
     get:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Get publishable keys
       responses:
         200:
@@ -165,7 +294,7 @@ paths:
   /payment-management/customer/client:
     get:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Get stripe client
       responses:
         200:
@@ -190,7 +319,7 @@ paths:
                         - NotFound
     post:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Create stripe client
       responses:
         200:
@@ -217,7 +346,7 @@ paths:
                         - UnexpectedException
     put:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Create stripe client
       requestBody:
         content:
@@ -253,7 +382,7 @@ paths:
   /payment-management/customer/payment-methods:
     get:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Get payment methods
       responses:
         200:
@@ -283,7 +412,7 @@ paths:
                         - NotFound
     post:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Create payment method
       requestBody:
         content:
@@ -326,7 +455,7 @@ paths:
   /payment-management/customer/payment-methods/{id}:
     delete:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Delete stripe payment method
       parameters:
         - in: path
@@ -363,7 +492,7 @@ paths:
   /payment-management/customer/invoice:
     get:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Get customer invoices
       responses:
         200:
@@ -405,7 +534,7 @@ paths:
   /payment-management/customer/invoice/preview:
     post:
       tags:
-        - payment methods management
+        - Payment methods management customer
       description: Get invoice preview
       requestBody:
         content:
@@ -455,5 +584,374 @@ paths:
                       enum:
                         - UnexpectedException
       
-  
+  /payment-management/operator/connected-account:
+    get:
+      tags:
+        - Payment methods management operator
+      description: Get connected account
+      responses:
+        200:
+          description: Get operator connected account info includes company info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connected_account'
+        404:
+          description: "Connected accouunt not found and unable to create it"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - NotFound
+        500:
+          description: "unexpected error response for GET /payment-management/operator/connected-account"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    delete:
+      tags:
+        - Payment methods management operator
+      description: Delete connected account
+      responses:
+        200:
+          description: Successfull DELETE connected account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  deleted:
+                    type: boolean
+  /payment-management/operator/connected-account/person:
+    get:
+      tags:
+        - Payment methods management operator
+      description: Get connected account
+      responses:
+        200:
+          description: Get operator connected account info includes company info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connected_account'
+        500:
+          description: "unexpected error response for GET /payment-management/operator/connected-account"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    post:
+      tags:
+        - Payment methods management operator
+      description: Create connected account person
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/person'
+                
+      responses:
+        200:
+          description: Successful Get invoice preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        404:
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+        500:
+          description: "unexpected error response for GET /payment-management/customer/invoice/preview"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+  /payment-management/operator/connected-account/person/{id}:
+    put:
+      tags:
+        - Payment methods management operator
+      description: Create connected account person
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/person'
+                
+      responses:
+        200:
+          description: Successful Get invoice preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/person'
+        404:
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+        500:
+          description: "unexpected error response for GET /payment-management/customer/invoice/preview"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+    delete:
+      tags:
+        - Payment methods management operator
+      description: Delete connected account person
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successful DELETE person method
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+  /payment-management/operator/connected-account/company:
+    post:
+      tags:
+        - Payment methods management operator
+      description: Create connected account company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/company'
+                
+      responses:
+        200:
+          description: Successful Get company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/company'
+        404:
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+        500:
+          description: "unexpected error response for GET /payment-management/customer/invoice/preview"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+  /payment-management/operator/connected-account/collect-method:
+    post:
+      tags:
+        - Payment methods management operator
+      description: Create connected account collect method
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                collect_token:
+                 type: string
+                 default: tok_visa_debit_us_transferSuccess
+      responses:
+        200:
+          description: Successful Get invoice preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card'
+        500:
+          description: "unexpected error response for POST /payment-management/operator/connected-account/collect_method"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+  /payment-management/operator/connected-account/collect-method/{id}:
+    delete:
+      tags:
+        - Payment methods management operator
+      description: Delete connected account person
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successful DELETE collect method
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        500:
+          description: "unexpected error response for DELETE /payment-management/operator/connected-account/collect_method"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+  /payment-management/operator/connected-account/aggrement-confirm:
+    post:
+      tags:
+        - Payment methods management operator
+      description: Create connected account aggrement confirm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ip:
+                 type: string
+                 default: 172.18.80.19
+                timestamp:
+                 type: integer
+      responses:
+        200:
+          description: Successful connected account aggrement confirm
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connected_account'
+        500:
+          description: "unexpected error response for POST /payment-management/operator/connected-account/aggrement-confirm"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
   
