@@ -1545,17 +1545,12 @@ paths:
                         enum:
                           - 'Drone not found'
                           
-  /account-management/operator/work_area:
+  /account-management/operator/work-area:
     get:
       tags:
         - Get work area
       summary: Get work area
       operationId: Get work area
-      parameters:
-        - in: query
-          name: work_area_id
-          schema:
-            type: integer
       responses:
         '200':
           description: Successful operation
@@ -1580,7 +1575,40 @@ paths:
                         type: string
     
                             
-  /account-management/operator/work_area/{id}:    
+  /account-management/operator/work-area/{id}:
+    get:
+      tags:
+        - Get work area
+      summary: Get work area
+      operationId: Get work area by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                default: 1
+        '404':
+          description: Work area not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
     put:
         tags:
           - Get work area
@@ -1676,3 +1704,51 @@ paths:
                         enum:
                           - 'Work Area not found'
                           
+  /account-management/operator/p2p:
+    post:
+      tags:
+        - create operator p2p
+      summary: Create Drone/Camera/Work area
+      operationId: create operator p2p
+      requestBody:
+        description: Create operator p2p
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_to_send:
+                  type: string
+                  example:
+                    "meir@aerodrome-sys.com"
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+        '404':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      error:
+                        type: string
+                        
