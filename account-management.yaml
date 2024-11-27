@@ -1751,4 +1751,143 @@ paths:
                         type: string
                       error:
                         type: string
+  
+  /license-management/upload-template-link:
+    get:
+      tags:
+        - License management operator
+      summary: Get License management operator link
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+        500:
+          description: "unexpected error response on GET /license-management/upload-template-link"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
                         
+  /license-management/upload-template/client-content:
+    get:
+      tags:
+        - License management operator
+      summary: Get License management operator html template
+      security: []
+      parameters:
+        - in: query
+          name: uuid
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            text/html:
+              schema:
+                type: string
+                example: '<form id="file-form"
+                            action="https://h73q45ao7a.execute-api.eu-central-1.amazonaws.com/dev/license-management/licence-upload?uuid=1b06d0cec66c4eb79d1f3193b23386fd"
+                              method="post" enctype="multipart/form-data">
+                          <label for="file-input">Choose file</label>
+                          <input type="file" accept="image/*" id="file-input" capture>
+                          <button class="btn btn-primary" type="submit">
+                            Upload
+                          </button>
+                        </form>'
+        500:
+          description: "unexpected error response on GET /license-management/upload-template/client-content"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+  
+  /license-management/licence-upload:
+    post:
+      tags:
+        - License management operator
+      summary: Send license file to server
+      security: []
+      parameters:
+        - in: query
+          name: uuid
+          schema:
+            type: string
+      requestBody:
+        description: Send image to server
+        content:
+          multipart/form-data: # Media type
+            schema: # Request payload
+              type: object
+              properties: # Request parts
+                file: # Part 3 (an image)
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        500:
+          description: "unexpected error response on POST /license-management/licence-upload"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+                        
+  /license-management/get-license-link:
+    get:
+      tags:
+        - License management operator
+      summary: Get License image link
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+        
+  
