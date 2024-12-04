@@ -459,4 +459,309 @@ paths:
           $ref: '#/components/responses/BadRequest'
         404:
           $ref: '#/components/responses/NotFound'
+  /product-management/operator/task/{id}/create-data-upload-urls:
+    post:
+      summary: get presigned S3 urls fro data files upload
+      description: get presigned S3 urls fro data files upload - operator authorization requered
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: List of file names fro upload
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_files:
+                  type: array
+                  items:
+                    type: string
+      tags:
+        - Product Data operations
+      responses:
+        200:
+          description: get presigned S3 urls fro data files upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presigned_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        file_name:
+                          type: string
+                        url:
+                          type: string
+        500:
+          description: "unexpected error response for POST /product-management/task/472/create-data-upload-urls"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+  /product-management/operator/task/{id}/task-data-urls:
+    get:
+      summary: get presigned S3 urls for data files load
+      description: get presigned S3 urls fro data files upload - operator authorization requered
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      tags:
+        - Product Data operations
+      responses:
+        200:
+          description: get presigned S3 urls fro data files upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presigned_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        file_name:
+                          type: string
+                        url:
+                          type: string
+        500:
+          description: "unexpected error response for GET /product-management/operator/task/{id}/task-data-urls"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+  /product-management/product/task/{id}/task-data-urls:
+    get:
+      summary: get presigned S3 urls for data files load
+      description: get presigned S3 urls fro data files upload - product authorization requered
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      tags:
+        - Product Data operations
+      responses:
+        200:
+          description: get presigned S3 urls fro data files upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presigned_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        file_name:
+                          type: string
+                        url:
+                          type: string
+        500:
+          description: "unexpected error response for GET /product-management/product/task/{id}/task-data-urls"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+  /product-management/operator/task/{id}/notify-start-processing:
+    post:
+      summary: Notify start product create
+      description: Notify start product create - operator authorization requered
+      tags:
+        - Product Data operations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Notify start product create
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presigned_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        file_name:
+                          type: string
+                        url:
+                          type: string
+        500:
+          description: "unexpected error response for POST /product-management/task/472/create-data-upload-urls"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
+  /product-management/product/assign-product:
+    post:
+      summary: Notify start product create
+      description: Notify finish product processing
+      tags:
+        - Product Data operations
+      requestBody:
+        description: List of file names fro upload
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extras:
+                  type: object
+                  properties:
+                    task_unique_id:
+                      type: integer
+                    
+      responses:
+        200:
+          description: Notify finish product processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        500:
+          description: "unexpected error response for POST /product-management/product/assign-product"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 error:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    error_type:
+                      type: string
+                      enum:
+                        - UnexpectedException
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      error_type:
+                        type: string
+                        enum:
+                        - NotFound
                   
