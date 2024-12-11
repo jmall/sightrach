@@ -514,6 +514,7 @@ components:
       enum:
         - customer
         - operator
+        - admin
     
     TokenS:
       type: object
