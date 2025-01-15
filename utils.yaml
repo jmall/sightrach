@@ -240,4 +240,45 @@ paths:
                     symbol:
                       type: string
                       example: $
-                  
+  /utils-management/statuses-operator:
+    get:
+      tags: 
+      - Statuses Operator
+      summary: Get all Statuses of Operator
+      description: Get all statuses of Operator
+      operationId: getOperatorStatuses
+      responses:
+        200:
+          description: List of Operator Statuses retrieved successfully.
+  /utils-management/distance:
+    get:
+      tags: 
+      - Get Distance Types
+      summary: Get distance types
+      description: Get distance types
+      operationId: getDistance
+      responses:
+        200:
+          description: List of distance types retrieved successfully.
+  /utils-management/wind:
+    get:
+      tags: 
+      - Get Wind Type
+      summary: Get Wind Types
+      description: Get Wind Types
+      operationId: getWind
+      responses:
+        200:
+          description: List of wind types retrieved successfully.
+  /utils-management/temp:
+    get:
+      tags: 
+      - Get Temp Type
+      summary: Get Wind Types
+      description: Get Wind Types
+      operationId: getTemp
+      responses:
+        200:
+          description: List of temp types retrieved successfully.
+  
+  
