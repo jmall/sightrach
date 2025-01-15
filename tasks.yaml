@@ -240,6 +240,31 @@ components:
         image_size:
           type: integer
           example: 345
+    TaskExtension:
+      type: object
+      properties:
+        extension_duration:
+          type: integer
+          example: 24
+        extension_reason_id:
+          type: integer
+          example: 1
+          
+    GraphDetails:
+      type: object
+      properties:
+        earnings:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                example: DEC
+              earnings:
+                type: number
+                example: 650
+
     invoice:
       type: object
       properties:
@@ -295,6 +320,8 @@ security:
 paths:
   /task-management/customer/tasks:
     post:
+      tags:
+          - Customer Task operations
       summary: Create new tasks
       description: Create a new set of tasks with provided details.
       operationId: createTasks
@@ -329,6 +356,8 @@ paths:
           $ref: '#/components/responses/NotFound'
 
     get:
+      tags:
+          - Customer Task operations
       summary: Get all tasks
       description: Retrieves a list of all tasks.
       operationId: getTasks
@@ -368,6 +397,8 @@ paths:
 
   /task-management/customer/tasks/{id}:
     get:
+      tags:
+          - Customer Task operations
       summary: Get a task
       description: Get an existing task by its ID.
       operationId: getTask
@@ -391,7 +422,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         404:
           $ref: '#/components/responses/NotFound'
+        
     put:
+      tags:
+          - Customer Task operations
       summary: Update a task
       description: Update an existing task by its ID.
       operationId: updateTask
@@ -424,6 +458,8 @@ paths:
           $ref: '#/components/responses/NotFound'
 
     delete:
+      tags:
+          - Customer Task operations
       summary: Delete a task
       description: Delete an existing task by its ID.
       operationId: deleteTask
@@ -443,6 +479,8 @@ paths:
           $ref: '#/components/responses/NotFound'
   /task-management/customer/dashboard-cards:
     get:
+      tags:
+          - Customer Task operations
       summary: Get Dashboard Cards
       description: Get customer Dashboard Cards.
       operationId: getDashboardCards
@@ -459,6 +497,203 @@ paths:
           $ref: '#/components/responses/BadRequest'
         404:
           $ref: '#/components/responses/NotFound'
+  /task-management/customer/approve-task-extension:
+    get:
+      tags:
+        - Customer Task operations
+      summary: Approve Task Extension
+      description: Approve Task Extension
+      operationId: getCustomerApproveTaskExtension
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: task_id
+          in: query
+          description: ID of the task to approve the extension for
+          required: true
+          schema:
+            type: integer
+        - name: extension_duration
+          in: query
+          description: The duration of the extension in hours
+          required: true
+          schema:
+            type: integer
+        - name: extension_reason_id
+          in: query
+          description: The reason for extension
+          required: true
+          schema:
+            type: integer
+        - name: uuid
+          in: query
+          description: The uuid the customer gets in the email on the button url
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Task extension approved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /task-management/operator/tasks:
+    get:
+      tags:
+          - Operator Task operations
+      summary: Get Operator Tasks
+      description: Get Operator Tasks.
+      operationId: getTasksOperator
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Tasks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /task-management/operator/tasks/{id}:
+    get:
+      tags:
+          - Operator Task operations
+      summary: Get a task
+      description: Get an existing task by its ID.
+      operationId: getTaskOperator
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID to get.
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Task retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+          
+  /task-management/operator/dashboard-cards:
+    get:
+      tags:
+          - Operator Task operations
+      summary: Get Operator Dashboard Cards
+      description: Get operator Dashboard Cards.
+      operationId: getDashboardCardsOperator
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Task dashboard card retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /task-management/operator/graph:
+    get:
+      tags:
+          - Operator Task operations
+      summary: Get Operator Graphs
+      description: Get operator graphs.
+      operationId: getOperatorGraphs
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Graph retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  /task-management/operator/comply/{id}:
+    put:
+      tags:
+          - Operator Task operations
+      summary: Comply a task
+      description: Comply an existing task by its ID.
+      operationId: complyTask
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID to comply.
+          schema:
+            type: integer
+      requestBody:
+        description: Updated details of the task.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDetails'
+      responses:
+        200:
+          description: Task complied successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /task-management/operator/extend-task-delivery:
+    put:
+      tags:
+          - Operator Task operations
+      summary: Request task extension
+      description: Request task extension
+      operationId: extendTaskDelivery
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Updated details of the task.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskExtension'
+      responses:
+        200:
+          description: Task complied successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetails'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
   /product-management/operator/task/{id}/create-data-upload-urls:
     post:
       summary: get presigned S3 urls fro data files upload
